@@ -2,6 +2,7 @@ package com.github.gopalakrrish.springstore.api.controllers;
 
 import com.github.gopalakrrish.springstore.api.dtos.UserDto;
 import com.github.gopalakrrish.springstore.api.entities.User;
+import com.github.gopalakrrish.springstore.api.mappers.UserMapper;
 import com.github.gopalakrrish.springstore.api.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,12 +19,13 @@ import java.util.List;
 public class UserController {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @GetMapping()
     public Iterable<UserDto> getAllUsers() {
         return userRepository.findAll()
                 .stream()
-                .map(user -> new UserDto(user.getId(),user.getName(),user.getEmail()))
+                .map(userMapper::toDto)
                 .toList();
     }
 
@@ -33,8 +35,7 @@ public class UserController {
         if (user == null)
             return ResponseEntity.notFound().build();
 
-        var userDto = new UserDto(user.getId(),user.getName(),user.getEmail());
-        return ResponseEntity.ok(userDto);
+        return ResponseEntity.ok(userMapper.toDto(user));
     }
 
 }
