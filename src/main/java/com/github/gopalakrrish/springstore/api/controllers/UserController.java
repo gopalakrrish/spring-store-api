@@ -1,6 +1,7 @@
 package com.github.gopalakrrish.springstore.api.controllers;
 
 import com.github.gopalakrrish.springstore.api.dtos.RegisterUserRequest;
+import com.github.gopalakrrish.springstore.api.dtos.UpdateUserRequest;
 import com.github.gopalakrrish.springstore.api.dtos.UserDto;
 import com.github.gopalakrrish.springstore.api.entities.User;
 import com.github.gopalakrrish.springstore.api.mappers.UserMapper;
@@ -55,6 +56,21 @@ public class UserController {
         var userDto = userMapper.toDto(user);
         var uri = uriBuilder.path("/users/{id}").buildAndExpand(userDto.getId()).toUri();
         return ResponseEntity.created(uri).body(userDto);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDto> updateUser(
+            @PathVariable(name = "id") Long id,
+            @RequestBody UpdateUserRequest request) {
+        var user = userRepository.findById(id).orElse(null);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        userMapper.update(request, user);
+        userRepository.save(user);
+
+        return ResponseEntity.ok(userMapper.toDto(user));
     }
 
 }
