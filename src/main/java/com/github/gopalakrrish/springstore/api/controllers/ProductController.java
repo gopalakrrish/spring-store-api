@@ -9,6 +9,7 @@ import com.github.gopalakrrish.springstore.api.repositories.ProductRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
@@ -44,7 +45,9 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto) {
+    public ResponseEntity<ProductDto> createProduct(
+            @RequestBody ProductDto productDto,
+            UriComponentsBuilder uriBuilder) {
         Category category = categoryRepository
                 .findById(productDto.getCategoryId()).orElse(null);
         if (category == null) {
@@ -56,6 +59,8 @@ public class ProductController {
         productRepository.save(product);
         productDto.setId(product.getId());
 
-        return ResponseEntity.ok(productDto);
+        var uri = uriBuilder.path("/products/{id}").buildAndExpand(productDto.getId()).toUri();
+
+        return ResponseEntity.created(uri).body(productDto);
     }
 }
