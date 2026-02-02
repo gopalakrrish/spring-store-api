@@ -1,8 +1,10 @@
 package com.github.gopalakrrish.springstore.api.controllers;
 
 import com.github.gopalakrrish.springstore.api.dtos.ProductDto;
+import com.github.gopalakrrish.springstore.api.entities.Category;
 import com.github.gopalakrrish.springstore.api.entities.Product;
 import com.github.gopalakrrish.springstore.api.mappers.ProductMapper;
+import com.github.gopalakrrish.springstore.api.repositories.CategoryRepository;
 import com.github.gopalakrrish.springstore.api.repositories.ProductRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,7 @@ import java.util.List;
 public class ProductController {
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
+    private final CategoryRepository categoryRepository;
 
     @GetMapping()
     public List<ProductDto> getAllProducts(
@@ -38,5 +41,21 @@ public class ProductController {
             return ResponseEntity.notFound().build();
 
         return ResponseEntity.ok(productMapper.toDto(product));
+    }
+
+    @PostMapping
+    public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto) {
+        Category category = categoryRepository
+                .findById(productDto.getCategoryId()).orElse(null);
+        if (category == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        var product = productMapper.toEntity(productDto);
+        product.setCategory(category);
+        productRepository.save(product);
+        productDto.setId(product.getId());
+
+        return ResponseEntity.ok(productDto);
     }
 }
