@@ -4,7 +4,6 @@ import com.github.gopalakrrish.springstore.api.dtos.ChangePasswordRequest;
 import com.github.gopalakrrish.springstore.api.dtos.RegisterUserRequest;
 import com.github.gopalakrrish.springstore.api.dtos.UpdateUserRequest;
 import com.github.gopalakrrish.springstore.api.dtos.UserDto;
-import com.github.gopalakrrish.springstore.api.entities.User;
 import com.github.gopalakrrish.springstore.api.mappers.UserMapper;
 import com.github.gopalakrrish.springstore.api.repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -14,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.List;
 import java.util.Set;
 
 @RestController
