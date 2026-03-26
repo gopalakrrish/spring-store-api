@@ -6,6 +6,8 @@ import com.github.gopalakrrish.springstore.api.dtos.UserDto;
 import com.github.gopalakrrish.springstore.api.mappers.UserMapper;
 import com.github.gopalakrrish.springstore.api.repositories.UserRepository;
 import com.github.gopalakrrish.springstore.api.services.JwtService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,17 +28,28 @@ public class AuthController {
     private final UserMapper userMapper;
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> login(@Valid  @RequestBody LoginRequest request)
-    {
+    public ResponseEntity<JwtResponse> login(
+            @Valid  @RequestBody LoginRequest request,
+            HttpServletResponse response) {
+
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 request.getEmail(), request.getPassword())
         );
 
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
 
-        var token = jwtService.generateToken(user);
+        var accessToken = jwtService.generateAccessToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
 
-        return ResponseEntity.ok(new JwtResponse(token));
+        var cookie = new Cookie("refreshToken", refreshToken);
+        cookie.setHttpOnly(true);
+        cookie.setPath("auth/refresh"); //7 days
+        cookie.setMaxAge(604800);
+        cookie.setSecure(true);
+
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok(new JwtResponse(accessToken));
     }
 
     @PostMapping("/validate")
