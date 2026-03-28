@@ -4,6 +4,7 @@ import com.github.gopalakrrish.springstore.api.dtos.ChangePasswordRequest;
 import com.github.gopalakrrish.springstore.api.dtos.RegisterUserRequest;
 import com.github.gopalakrrish.springstore.api.dtos.UpdateUserRequest;
 import com.github.gopalakrrish.springstore.api.dtos.UserDto;
+import com.github.gopalakrrish.springstore.api.entities.Role;
 import com.github.gopalakrrish.springstore.api.mappers.UserMapper;
 import com.github.gopalakrrish.springstore.api.repositories.UserRepository;
 import jakarta.validation.Valid;
@@ -60,6 +61,7 @@ public class UserController {
 
         var user = userMapper.toEntity(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(Role.USER);
         userRepository.save(user);
 
         var userDto = userMapper.toDto(user);
