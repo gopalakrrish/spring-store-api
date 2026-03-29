@@ -1,5 +1,6 @@
 package com.github.gopalakrrish.springstore.api.config;
 
+import com.github.gopalakrrish.springstore.api.entities.Role;
 import com.github.gopalakrrish.springstore.api.filters.JwtAuthenticationFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -55,6 +56,7 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(c -> c
                     .requestMatchers("/carts/**").permitAll()
+                    .requestMatchers("/admin/**").hasRole(Role.ADMIN.name())
                     .requestMatchers(HttpMethod.POST, "/users").permitAll()
                     .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                     .requestMatchers(HttpMethod.POST, "/auth/refresh").permitAll()
