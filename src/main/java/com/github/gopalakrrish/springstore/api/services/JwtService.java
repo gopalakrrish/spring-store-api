@@ -1,6 +1,7 @@
 package com.github.gopalakrrish.springstore.api.services;
 
 import com.github.gopalakrrish.springstore.api.config.JwtConfig;
+import com.github.gopalakrrish.springstore.api.entities.Role;
 import com.github.gopalakrrish.springstore.api.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -59,6 +60,11 @@ public class JwtService {
 
     public Long getUserIdFromToken(String token) {
         return Long.valueOf(getClaims(token).getSubject());
+    }
+
+    public Role getRoleFromToken(String token) {
+        return Role.valueOf(getClaims(token).get("role", String.class));
+
     }
 
 }
