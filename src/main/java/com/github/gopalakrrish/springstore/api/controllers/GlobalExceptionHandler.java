@@ -1,5 +1,6 @@
 package com.github.gopalakrrish.springstore.api.controllers;
 
+import com.github.gopalakrrish.springstore.api.dtos.ErrorDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -12,8 +13,9 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<Map<String,String>> handleUnreadableMessage() {
-        return ResponseEntity.badRequest().body(Map.of("error", "Invalid request body"));
+    public ResponseEntity<ErrorDto> handleUnreadableMessage() {
+        return ResponseEntity.badRequest().body(
+                new ErrorDto("Invalid request body"));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

@@ -2,6 +2,7 @@ package com.github.gopalakrrish.springstore.api.controllers;
 
 import com.github.gopalakrrish.springstore.api.dtos.CheckoutRequest;
 import com.github.gopalakrrish.springstore.api.dtos.CheckoutResponse;
+import com.github.gopalakrrish.springstore.api.dtos.ErrorDto;
 import com.github.gopalakrrish.springstore.api.entities.*;
 import com.github.gopalakrrish.springstore.api.repositories.CartRepository;
 import com.github.gopalakrrish.springstore.api.repositories.OrderRepository;
@@ -31,11 +32,11 @@ public class CheckoutController {
             @Valid @RequestBody CheckoutRequest request) {
         var cart = cartRepository.getCartWithItems(request.getCartId()).orElse(null);
         if (cart == null) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Cart not found"));
+            return ResponseEntity.badRequest().body(new ErrorDto("Cart not found"));
         }
 
         if (cart.getItems().isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Cart is empty"));
+            return ResponseEntity.badRequest().body(new ErrorDto("Cart is empty"));
         }
 
         var order = new Order();
