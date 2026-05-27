@@ -1,9 +1,7 @@
 package com.github.gopalakrrish.springstore.api.controllers;
 
 import com.github.gopalakrrish.springstore.api.dtos.OrderDto;
-import com.github.gopalakrrish.springstore.api.mappers.OrderMapper;
-import com.github.gopalakrrish.springstore.api.repositories.OrderRepository;
-import com.github.gopalakrrish.springstore.api.services.AuthService;
+import com.github.gopalakrrish.springstore.api.services.OrderService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,15 +13,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
-    private final AuthService authService;
-    private final OrderRepository orderRepository;
-    private final OrderMapper orderMapper;
+    private final OrderService orderService;
 
     @GetMapping
     public List<OrderDto> getAllOrders() {
-        var user = authService.getCurrentUser();
-        var orders = orderRepository.findAllByCustomer(user);
-        return  orders.stream().map(orderMapper::toDto).toList();
+        return orderService.getAllOrders();
     }
 
 }
