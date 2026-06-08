@@ -1,6 +1,6 @@
 package com.github.gopalakrrish.springstore.api.entities;
 
-public enum OrderStatus {
+public enum PaymentStatus {
     PENDING,
     PAID,
     FAILED,

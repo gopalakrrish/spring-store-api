@@ -32,11 +32,11 @@ public class CheckoutController {
     }
 
     @PostMapping("/webhook")
-    public ResponseEntity<Void> handleWebhook(
+    public void handleWebhook(
             @RequestHeader Map<String, String> headers,
             @RequestBody String payload
     ) {
-        return checkoutService.handleWebhookEvent(new WebhookRequest(headers, payload));
+        checkoutService.handleWebhookEvent(new WebhookRequest(headers, payload));
     }
 
     @ExceptionHandler(PaymentException.class)
